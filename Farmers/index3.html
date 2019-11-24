@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>281 Project</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
+
+<script type='text/javascript'>
+        
+        function addFields(){
+            // Number of inputs to create
+            var number = document.getElementById("numberofsensor").value;
+            
+	    // Container <div> where dynamic content will be placed
+            var container = document.getElementById("container");
+            
+	    // Clear previous contents of the container
+            while (container.hasChildNodes()) {
+                container.removeChild(container.lastChild);
+            }
+            
+            for (i=0;i<number;i++){
+                // Append a node with a random text
+                container.appendChild(document.createTextNode("sensor" + (i+1)));
+                // Create an <input> element, set its type and name attributes
+                var input = document.createElement("input");
+                input.type = "text";
+                input.name = "numberofsensor" + i;
+                container.appendChild(input);
+                // Append a line break 
+                container.appendChild(document.createElement("br"));
+            }
+        }
+
+</script>
+</head>
+<body>
+<form action="/">
+  Edge Station ID: <input type="text" name="id"><br>
+  Edge Station Type: <input type="text" name="type"><br>
+  Number of sensors: <input type="number" id="numberofsensor" name="numberofsensors" onfocusout="addFields()" min="1" max="5"><br>
+  <div id="container"></div>
+  <input type="submit" value="Submit">
+</form>
+
+<div style="width:400px;height:400px">
+	<canvas id="mySensorChart" width="200" height="200"></canvas>
+<div>
+
+<div style="width:400px;height:400px">
+	<canvas id="myPriceChart" width="200" height="200"></canvas>
+<div>
+
+<div style="width:400px;height:400px">
+	<canvas id="myTotalPriceChart" width="200" height="200"></canvas>
+<div>
+
+<script>
+var ctx = document.getElementById('mySensorChart');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Temperature', 'GPS', 'Raindrop'],
+        datasets: [{
+        //    label: 'Sensor Total Active Time',
+	//    xAxisID: 'Sensors',
+	    yAxisID: 'y-axis-1',
+            data: [50, 10, 15],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                //'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                //'rgba(153, 102, 255, 0.2)',
+                //'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                //'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                //'rgba(153, 102, 255, 1)',
+                //'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        legend: {
+          display: false
+        },
+	responsive: true,
+        title:{
+          display:true,
+          text:"Sensor Total Active Time"
+        },
+        tooltips: {
+          mode: 'index',
+          intersect: true,
+          callbacks: {
+           label: function(tooltipItem) {
+                  return tooltipItem.yLabel;
+           }
+          }
+        },
+        scales: {
+          yAxes: [{
+            display: true,
+            position: "left",
+            id: "y-axis-1",
+            ticks: {
+	      beginAtZero: true,
+              callback: function(value, index, values) {
+                return value + " hrs";
+              }
+            }
+         }],
+       }
+    }
+
+});
+
+
+
+
+var ctx = document.getElementById('myPriceChart');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Temperature', 'GPS', 'Raindrop'],
+        datasets: [{
+        //    label: 'Sensor Total Active Time',
+	//    xAxisID: 'Sensors',
+	    yAxisID: 'y-axis-1',
+            data: [20, 25, 15],
+            fill: false,
+    	    borderColor: '#faa',
+    	    backgroundColor: "#faa",        
+        }]
+    },
+    options: {
+        legend: {
+          display: false
+        },
+	responsive: true,
+        title:{
+          display:true,
+          text:"Price Sensor"
+        },
+        tooltips: {
+          mode: 'index',
+          intersect: true,
+          callbacks: {
+           label: function(tooltipItem) {
+                  return tooltipItem.yLabel;
+           }
+          }
+        },
+        scales: {
+          yAxes: [{
+            display: true,
+            position: "left",
+            id: "y-axis-1",
+            ticks: {
+	      beginAtZero: true,
+              callback: function(value, index, values) {
+                return "$" + value;
+              }
+            }
+         }],
+       }
+    }
+
+});
+
+
+
+
+
+
+
+var ctx = document.getElementById('myTotalPriceChart');
+var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Temperature', 'GPS', 'Raindrop'],
+        datasets: [{
+        //    label: 'Total Price',
+	//    xAxisID: 'Sensors',
+	    yAxisID: 'y-axis-1',
+            data: [50, 10, 15],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                //'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                //'rgba(153, 102, 255, 0.2)',
+                //'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                //'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                //'rgba(153, 102, 255, 1)',
+                //'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        legend: {
+          display: false
+        },
+	responsive: true,
+        title:{
+          display:true,
+          text:"Total Price"
+        },
+        tooltips: {
+          mode: 'index',
+          intersect: true,
+          callbacks: {
+           label: function(tooltipItem) {
+                  return tooltipItem.yLabel;
+           }
+          }
+       }
+    }
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
