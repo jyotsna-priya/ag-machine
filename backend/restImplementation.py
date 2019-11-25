@@ -35,5 +35,4 @@ if __name__ == "__main__":
             port=5555,
             debug=True,
             use_reloader=False,
-            ssl_context='adhoc',
             threaded=True)
