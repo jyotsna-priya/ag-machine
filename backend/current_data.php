@@ -141,52 +141,45 @@ tr:nth-child(even) {
               </div>
 	      <div class="panel panel-default">
 		<?php
-		$url = "https://localhost:5555/get_sensor_data";
+		$url = "http://54.161.132.160:5555/get_sensor_data?";
+                $data_arr = array("endpoint"=>"a3bikkrdsdyhco-ats.iot.us-east-1.amazonaws.com","thingname"=>"edge_station1");
+                $response = http($url,$data_arr,'get');
+                $jsonArray = json_decode($response,true);
+                $temperature = $jsonArray["temperature"];
+                $humidity = $jsonArray["humidity"];
+                $precipProbability = $jsonArray["precipProbability"];
+                $windSpeed = $jsonArray["windSpeed"];
+                $gps = $jsonArray["gps"];
 
-		$response = http($url,[],'get');
-		$jsonArray = json_decode($response,true);
-		$temperature = $jsonArray["temperature"];
-		$humidity = $jsonArray["humidity"];
-		$precipProbability = $jsonArray["precipProbability"];
-		$windSpeed = $jsonArray["windSpeed"];
-		$gps = $jsonArray["gps"];
+                function http($url,$data=[],$method='get'){
+                    $ch = curl_init();
+                    $chOpts = [
+                        CURLOPT_SSL_VERIFYPEER=>false,
+                        CURLOPT_HEADER=>false,
+                        CURLOPT_FOLLOWLOCATION=>true,
+                        CURLOPT_RETURNTRANSFER=>true,
+                        CURLOPT_CONNECTTIMEOUT =>8,
+                        CURLOPT_TIMEOUT => 16,
+                        CURLOPT_HTTPHEADER,[
+                            'Content-Type: application/json'
+                        ]
+                    ];
+                    $url.='?'.is_array($data)?http_build_query($data):$data;
+                    $chOpts[CURLOPT_URL]=$url;
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+                    //echo 'Request: '.$method.'['.$url.']'."\n";
+                    //print_r($data);
+                    curl_setopt_array($ch, $chOpts);
+                    if(curl_exec($ch) === false)
+                    {
+                        echo 'Curl error: ' . curl_error($ch);
+                    }
+                    $res = curl_exec($ch);
+                    curl_close($ch);
+                    return $res;
 
-		function http($url,$data=[],$method='get'){
-    		$ch = curl_init();
-    		$chOpts = [
-        CURLOPT_SSL_VERIFYPEER=>false,
-        CURLOPT_HEADER=>false,
-        CURLOPT_FOLLOWLOCATION=>true,
-        CURLOPT_RETURNTRANSFER=>true,
-        CURLOPT_CONNECTTIMEOUT =>8,
-        CURLOPT_TIMEOUT => 16,
-        CURLOPT_HTTPHEADER,[
-            'Content-Type: application/json'
-        ]
-    ];
-    if($method=='put'){
-        $chOpts[CURLOPT_PUT]=true;
-        $chOpts[CURLOPT_POSTFIELDS]=$data;
-        $chOpts[CURLOPT_URL]=$url;
-    }
-    else{
-        $url.='?'.is_array($data)?http_build_query($data):$data;
-        $chOpts[CURLOPT_URL]=$url;
-    }
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-    //echo 'Request: '.$method.'['.$url.']'."\n";
-    //print_r($data);
-    curl_setopt_array($ch, $chOpts);
-    if(curl_exec($ch) === false)
-    {
-        echo 'Curl error: ' . curl_error($ch);
-    }
-    $res = curl_exec($ch);
-    curl_close($ch);
-    return $res;
-}
-
-?>
+		}
+		?>
                     <table class="table">
                         <thead>
                             <tr>
