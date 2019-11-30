@@ -8,14 +8,17 @@ app = Flask(__name__)
 
 @app.route('/get_sensor_data', methods=['GET'])
 def get_sensor_data():
-    # Get edgestation ID from GET param : testing pending
-    #edge_station_id = request.args.get("edgestationid")
     # Code to get data from shadow
-    subprocess.check_call(["python3", "basicPubSub1.py", "-e", "a3bikkrdsdyhco-ats.iot.us-east-1.amazonaws.com", "-r", "AmazonRootCA1.pem", "-w", "-id", "backend_vm", "-t", "edgeStationTopic", "-m", "subscribe"])
+
+    # Get endpoint and thingname from GET param
+    endpoint = request.args.get("endpoint")
+    thingname = request.args.get("thingname")
+    subprocess.check_call(["python3", "getShadowData.py", "-e", "{}".format(endpoint), "-n", "{}".format(thingname)])
     f = open("output.txt", "r")
-    data = json.loads(f.read())["message"]
+    data = json.loads(f.read())["state"]["desired"]["property"]
     f.close()
     return data
+
 
 @app.route('/configure_edgestation', methods=['PUT'])
 def update_sensor():
