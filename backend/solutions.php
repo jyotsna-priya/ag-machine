@@ -148,10 +148,14 @@ session_start();
                                       if ($result->num_rows > 0) {
                                       // output data of each row
                                       while($row = $result->fetch_assoc()) {
-                                        $_SESSION['county'] = $row["county"];
-                                        $_SESSION['city'] = $row["city"];
-                                        $_SESSION['edgestation_id'] = $row["edgestation_id"];
-                                        $_SESSION['rented'] = $row["rented"];
+                                        $data = array(
+                                          'header' => '',
+                                          'county' => $row["county"],
+                                          'city' => $row["city"],
+                                          'edgestation_id' => $row["edgestation_id"],
+                                          'rented' => $row["rented"]
+                                        );
+                                        $query = http_build_query(array('edgestationdata' => $data));
                                         /*echo "<tr><td>" . $row["county"]. "</td><td>" . $row["city"] . "</td><td>"
                                       . $row["edgestation_id"]. "</td><td>" . "<a href = 'sensors.php'>Select</a>" . "</td></tr>";*/
                                         echo "<tr><td>";
@@ -161,7 +165,7 @@ session_start();
                                         echo "</td><td>";
                                         echo $row["edgestation_id"];
                                         echo "</td><td>";
-                                        echo "<a href = 'sensors.php'>Select</a>";
+                                        echo "<a href = \"sensors.php?edgestationdata=".$query."\">Select</a>";
                                         echo "</td></tr>";
                                       }
                                       echo "</table>";
