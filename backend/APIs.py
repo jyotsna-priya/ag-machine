@@ -33,12 +33,6 @@ def create_thing():
    	principal='arn:aws:iot:us-west-1:225587795549:cert/cdbe9f9281761f17c48738ac05b6ffa85942d7861ccf74f3cbdb429859b938f2'
     )
 
-    response = client.update_thing_shadow(
-     	thingName= thingShadowName,     		
-        payload= payload
-    )
-
-
     return "Edge Station: " + thingShadowName + " added."
 
 @app.route('/delete_iot_thing', methods=['GET'])
