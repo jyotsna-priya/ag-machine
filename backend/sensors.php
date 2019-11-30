@@ -119,12 +119,25 @@ session_start();
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <?php
-                        if(isset($_SESSION['edgestation_id'])){
-                            $edgestation_id = $_SESSION['edgestation_id'];
-                            $county = $_SESSION['county'];
-                            $city = $_SESSION['city'];
-                            $rented = $_SESSION['rented'];
+                        if (isset($_GET['edgestationdata'])) {
+                          $edgestationdata = $_GET['edgestationdata'];
+                          $edgestation_id = $edgestationdata['edgestation_id'];
+                          $county = $edgestationdata['county'];
+                          $city = $edgestationdata['city'];
+                          $rented = $edgestationdata['rented'];
+                          $_SESSION['county'] = $county;
+                          $_SESSION['city'] = $city;
+                          $_SESSION['edgestation_id'] = $edgestation_id;
+                          $_SESSION['rented'] = $rented;
+                          //print_r($edgestationdata);
                         }
+                        else {
+                          $county = $_SESSION['county'];
+                          $city = $_SESSION['city'];
+                          $edgestation_id = $_SESSION['edgestation_id'];
+                          $rented = $_SESSION['rented'];
+                        }
+
                         echo "<strong>You are on edge station $edgestation_id in $city, $county. Here are the details:</strong>";
                     ?>
                 </div>
