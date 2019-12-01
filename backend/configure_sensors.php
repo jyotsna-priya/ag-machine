@@ -178,7 +178,7 @@ session_start();
                             </tr>
                             <tr>
                             <td>Humidity</td>
-                            <td><?php echo $array_val[0]; ?></td>
+                            <td><?php echo $array_val[1]; ?></td>
                             <td>
                                 <label class='radio-inline'>
                                 <input type='radio' name='humidity' value='Add' checked>
@@ -197,7 +197,7 @@ session_start();
                             </tr>
                             <tr>
                             <td>Rainfall</td>
-                            <td><?php echo $array_val[0]; ?></td>
+                            <td><?php echo $array_val[2]; ?></td>
                             <td>
                                 <label class='radio-inline'>
                                 <input type='radio' name='precipProbability' value='Add' checked>
@@ -216,7 +216,7 @@ session_start();
                             </tr>
                             <tr>
                             <td>GPS</td>
-                            <td><?php echo $array_val[0]; ?></td>
+                            <td><?php echo $array_val[3]; ?></td>
                             <td>
                                 <label class='radio-inline'>
                                 <input type='radio' name='gps' value='Add' checked>
@@ -235,7 +235,7 @@ session_start();
                             </tr>
                             <tr>
                             <td>Speed</td>
-                            <td><?php echo $array_val[0]; ?></td>
+                            <td><?php echo $array_val[4]; ?></td>
                             <td>
                                 <label class='radio-inline'>
                                 <input type='radio' name='windSpeed' value='Add' checked>
@@ -272,17 +272,14 @@ session_start();
                                 $sensor_list['gps']=$_POST['gps']; 
                             if(isset($_POST['windSpeed']))
                                 $sensor_list['windSpeed']=$_POST['windSpeed'];
+			    $sensor_list["location"] = "38.8267 -123.4233";
+			    $sensor_list["thingname"] = "edge_station1";
                             $sensor_list_json = json_encode($sensor_list);
 			    //print_r($sensor_list);
-			    $fp = fopen("input.txt","w");
-			    fwrite($fp,$sensor_list_json);
-			    fclose($fp);
-			    $url = "https://localhost:5555/configure_edgestation";
-                            $response = http($url, [],'put');
+			    $url = "http://54.161.132.160:5555/configure_edgestation";
+                            $response = http($url, $sensor_list_json, 'put');
                         }
-                        //$url = "https://localhost:5555/configure_edgestation";
-                        //$response = http($url, [],'put');
-                        function http($url,$data=[],$method='get'){
+                        function http($url,$data=[],$method='put'){
 			    $ch = curl_init();
                             $chOpts = [
                                 CURLOPT_SSL_VERIFYPEER=>false,
@@ -291,21 +288,12 @@ session_start();
                                 CURLOPT_RETURNTRANSFER=>true,
                                 CURLOPT_CONNECTTIMEOUT =>8,
                                 CURLOPT_TIMEOUT => 16,
-                                CURLOPT_HTTPHEADER,[
-                                    'Content-Type: application/json'
-                                ]
                             ];
-                            if($method=='put'){
-                                //$chOpts[CURLOPT_PUT]=true;
-				$chOpts[CURLOPT_CUSTOMREQUEST]="PUT";    
-				$chOpts[CURLOPT_POSTFIELDS]=$data;
-                                $chOpts[CURLOPT_URL]=$url;
-                            }
-                            else{
-                                $url.='?'.is_array($data)?http_build_query($data):$data;
-                                $chOpts[CURLOPT_URL]=$url;
-                            }
+			    $chOpts[CURLOPT_CUSTOMREQUEST]="PUT";    
+			    $chOpts[CURLOPT_POSTFIELDS]=$data;
+                            $chOpts[CURLOPT_URL]=$url;
                             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+			    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
                             //echo 'Request: '.$method.'['.$url.']'."\n";
                             //print_r($data);
                             curl_setopt_array($ch, $chOpts);
