@@ -69,7 +69,7 @@ session_start();
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li><a active href="index.php">Home</a></li>
+        <li><a class="active" href="index.php">Home</a></li>
         <li><a href="products.php">Products</a></li>
         <li><a href="pricing.php">Pricing</a></li>
         <li><a href="catalog.html">Order</a></li>
@@ -131,7 +131,7 @@ session_start();
           <span class="d-block text-uppercase text-primary"> A Smart AG Machine Service</span>
           <h2 class="mb-4 section-title">WHO WE ARE </h2>
           <p>A cloud based company providing Agricultural IOT Edge Machines for farmers.</p>
-          <p><a href="products.html" class="btn btn-outline-black">Learn More</a></p>
+          <p><a href="products.php" class="btn btn-outline-black">Learn More</a></p>
         </div>
               </div>
 </div><br>
