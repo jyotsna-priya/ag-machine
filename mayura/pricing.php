@@ -139,8 +139,8 @@ text-transform: uppercase;
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li><a active href="index.php">Home</a></li>
-        <li><a href="products.html">Products</a></li>
+        <li><a href="index.php">Home</a></li>
+        <li><a href="products.php">Products</a></li>
         <li><a class="active" href="#">Pricing</a></li>
         <li><a href="catalog.html">Order</a></li>
       </ul>
