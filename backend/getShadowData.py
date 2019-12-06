@@ -1,8 +1,39 @@
+from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
+import logging
+import time
+import json
+import argparse
+
+
+# Shadow JSON schema:
+#
+# Name: Bot
+# {
+#	"state": {
+#		"desired":{
+#			"property":<INT VALUE>
+#		}
+#	}
+# }
+
 # Custom Shadow callback
 def customShadowCallback(payload, responseStatus, token):
     # payload is a JSON string ready to be parsed using json.loads(...)
     # in both Py2.x and Py3.x
     print("----------------------------------------------------")
+    print(responseStatus)
+    payloadDict = json.loads(payload)
+    print("++++++++DATA++++++++++")
+    print(payload)
+    print("+++++++++++++++++++++++\n\n")
+    f = open("output.txt", "w")
+    f.write(payload)
+    f.close()
+
+# Custom Shadow callback
+def customShadowCallback_Delta(payload, responseStatus, token):
+    # payload is a JSON string ready to be parsed using json.loads(...)
+    # in both Py2.x and Py3.x
     print(responseStatus)
     payloadDict = json.loads(payload)
     print("++++++++DATA++++++++++")
@@ -33,6 +64,7 @@ port = 443
 #thingName = "edge_station1"
 thingName = args.thingName
 clientId = "backendClient"
+
 
 # Configure logging
 logger = logging.getLogger("AWSIoTPythonSDK.core")
@@ -67,5 +99,6 @@ deviceShadowHandler = myAWSIoTMQTTShadowClient.createShadowHandlerWithName(thing
 #    time.sleep(1)
 
 #Get shadow data
+#deviceShadowHandler.shadowRegisterDeltaCallback(customShadowCallback_Delta)
 deviceShadowHandler.shadowGet(customShadowCallback, 5)
 deviceShadowHandler.shadowGet(customShadowCallback, 5)
