@@ -71,10 +71,7 @@ session_start();
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
         <li><a href="solutions.php">Solutions</a></li>
-        <li><a href="#">Pricing</a></li>
-        <li><a href="#">Documentation</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
@@ -138,147 +135,52 @@ session_start();
                         <thead style="text-align:center">
                             <tr>
                             <th>Sensor Type</th>
-                            <th>Sensor ID</th>
                             <th>Add</th>
                             <th>Delete</th>
                             <th>Repair</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <?php
-                                if (isset($_SESSION['sensors'])) {
-                                    $array_val = array();
-                                    $add = "add";
-                                    $delete = "delete";
-                                    $repair = "repair";
-                                    foreach ($_SESSION['sensors'] as $value) {
-                                        array_push($array_val, $value[1]);
+			<tbody>
+			<form method="post", action="">
+                        <?php
+                        	if (isset($_SESSION['sensors'])) {
+                            		$sensor_list = array();
+                            		foreach ($_SESSION['sensors'] as $value) {
+                              			$sensor_list[$value[0]] = "";
+                        ?>	
+                        <tr>
+                        	<td><div align="center"><?php echo ucfirst($value[0]) ?></div></td>
+                            	<td><div align="center"><input type="radio" name="<?php echo $value[0] ?>" value="Add" checked> </div></td>
+                            	<td><div align="center"><input type="radio" name="<?php echo $value[0] ?>" value="Delete"> </div></td>
+                            	<td><div align="center"><input type="radio" name="<?php echo $value[0] ?>" value="Repair"> </div></td>
+                        </tr>
+                        <?php
+                              		}
+                            	}
+                        ?>
+                          <input type="submit" name='addDeleteRepair' style="font-face: 'Comic Sans MS'; font-size: larger; color: white; background-color: green;" value="Save Changes">
+			  </form>
+			<?php
+				if (isset($_POST['addDeleteRepair']))
+                                {
+                                    foreach ($sensor_list as $key => $value) {
+                                      if(isset($_POST[$key]))
+                                        $sensor_list[$key]=$_POST[$key];
                                     }
                                 }
-                            ?>
-                            <tr>
-                            <form method="post" action="">
-                            <td>Temperature</td>
-                            <td><?php echo $array_val[0]; ?></td>
-                            <td>
-                                <label class='radio-inline'>
-                                <input type='radio' name='temperature' value='Add' checked>
-                                </label>
-                            </td>
-                            <td>
-                                <label class='radio-inline'>
-                                <input type='radio' name='temperature' value='Delete'>
-                                </label>
-                            </td>
-                            <td>
-                                <label class='radio-inline'>
-                                <input type='radio' name='temperature' value='Repair'>
-                                </label></td>
-                            <td>
-                            </tr>
-                            <tr>
-                            <td>Humidity</td>
-                            <td><?php echo $array_val[1]; ?></td>
-                            <td>
-                                <label class='radio-inline'>
-                                <input type='radio' name='humidity' value='Add' checked>
-                                </label>
-                            </td>
-                            <td>
-                                <label class='radio-inline'>
-                                <input type='radio' name='humidity' value='Delete'>
-                                </label>
-                            </td>
-                            <td>
-                                <label class='radio-inline'>
-                                <input type='radio' name='humidity' value='Repair'>
-                                </label></td>
-                            <td>
-                            </tr>
-                            <tr>
-                            <td>Rainfall</td>
-                            <td><?php echo $array_val[2]; ?></td>
-                            <td>
-                                <label class='radio-inline'>
-                                <input type='radio' name='precipProbability' value='Add' checked>
-                                </label>
-                            </td>
-                            <td>
-                                <label class='radio-inline'>
-                                <input type='radio' name='precipProbability' value='Delete'>
-                                </label>
-                            </td>
-                            <td>
-                                <label class='radio-inline'>
-                                <input type='radio' name='precipProbability' value='Repair'>
-                                </label></td>
-                            <td>
-                            </tr>
-                            <tr>
-                            <td>GPS</td>
-                            <td><?php echo $array_val[3]; ?></td>
-                            <td>
-                                <label class='radio-inline'>
-                                <input type='radio' name='gps' value='Add' checked>
-                                </label>
-                            </td>
-                            <td>
-                                <label class='radio-inline'>
-                                <input type='radio' name='gps' value='Delete'>
-                                </label>
-                            </td>
-                            <td>
-                                <label class='radio-inline'>
-                                <input type='radio' name='gps' value='Repair'>
-                                </label></td>
-                            <td>
-                            </tr>
-                            <tr>
-                            <td>Speed</td>
-                            <td><?php echo $array_val[4]; ?></td>
-                            <td>
-                                <label class='radio-inline'>
-                                <input type='radio' name='windSpeed' value='Add' checked>
-                                </label>
-                            </td>
-                            <td>
-                                <label class='radio-inline'>
-                                <input type='radio' name='windSpeed' value='Delete'>
-                                </label>
-                            </td>
-                            <td>
-                                <label class='radio-inline'>
-                                <input type='radio' name='windSpeed' value='Repair'>
-                                </label></td>
-                            <td>
-                            </tr>
-                            <tr>
-                            <input type="submit" name='addDeleteRepair' style="font-face: 'Comic Sans MS'; font-size: larger; color: white; background-color: green;" value="Save Changes">
-                            </tr>
-                        </form>
+			?>
                         </tbody>
                     </table>
                     <?php
-                        $sensor_list = array("temperature"=>"", "humidity"=>"", "precipProbability"=>"", "gps"=>"", "windSpeed"=>"");
-                        if (isset($_POST['addDeleteRepair']))
-                        {
-                            if(isset($_POST['temperature']))
-                                $sensor_list['temperature']=$_POST['temperature'];
-                            if(isset($_POST['humidity']))
-                                $sensor_list['humidity']=$_POST['humidity'];
-                            if(isset($_POST['precipProbability']))
-                                $sensor_list['precipProbability']=$_POST['precipProbability'];
-                            if(isset($_POST['gps']))
-                                $sensor_list['gps']=$_POST['gps']; 
-                            if(isset($_POST['windSpeed']))
-                                $sensor_list['windSpeed']=$_POST['windSpeed'];
-			    $sensor_list["location"] = "38.8267 -123.4233";
-			    $sensor_list["thingname"] = "edge_station1";
-                            $sensor_list_json = json_encode($sensor_list);
-			    //print_r($sensor_list);
-			    $url = "http://54.161.132.160:5555/configure_edgestation";
-                            $response = http($url, $sensor_list_json, 'put');
-                        }
+			$sensor_list["location"] = "38.8267 -123.4233";
+			if (isset($_SESSION['edgestation_name']))
+			    $sensor_list["thingname"] = $_SESSION['edgestation_name'];
+			else
+				echo "Edgestation not selected!";
+			print_r($sensor_list);
+                        $sensor_list_json = json_encode($sensor_list);
+			$url = "http://54.161.132.160:5555/configure_edgestation";
+                        $response = http($url, $sensor_list_json, 'put');
                         function http($url,$data=[],$method='put'){
 			    $ch = curl_init();
                             $chOpts = [
@@ -297,14 +199,35 @@ session_start();
                             //echo 'Request: '.$method.'['.$url.']'."\n";
                             //print_r($data);
                             curl_setopt_array($ch, $chOpts);
-                            if(curl_exec($ch) === false)
+			    $res = curl_exec($ch);
+                            if($res === false)
                             {
                                 echo 'Curl error: ' . curl_error($ch);
                             }
-                            $res = curl_exec($ch);
                             curl_close($ch);
                             return $res;
+			}
+			$conn = mysqli_connect("ec2-54-161-132-160.compute-1.amazonaws.com", "ag-machine", "password123", "agmachinedb");
+			$edgestation_id = $_SESSION['edgestation_id'];
+			// Check connection
+                        if ($conn->connect_error) {
+                        	die("Connection failed: " . $conn->connect_error);
                         }
+			foreach ($sensor_list as $key => $value) {
+			    if ($value == "Add") {
+                                $sql = "UPDATE sensors SET sensor_status = 'Configured' WHERE sensor_type = '$key' AND edgestation_id = $edgestation_id";
+                                $result = $conn->query($sql);
+                            }
+                            else if ($value == "Delete") {
+                                $sql = "UPDATE sensors SET sensor_status = 'Not Configured' WHERE sensor_type = '$key' AND edgestation_id = $edgestation_id";
+                                $result = $conn->query($sql);
+                            }
+                            else if ($value == "Repair") {
+                                $sql = "UPDATE sensors SET sensor_status = 'Maintenance' WHERE sensor_type = '$key' AND edgestation_id = $edgestation_id";
+                                $result = $conn->query($sql);
+			    }
+			}
+			$conn->close();
                     ?>
             </div>
         </div>
