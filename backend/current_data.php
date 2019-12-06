@@ -1,9 +1,9 @@
 <?php
 session_start();
 //print_r($_SESSION['sensors']);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -83,8 +83,6 @@ tr:nth-child(even) {
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Home</a></li>
         <li><a href="solutions.php">Solutions</a></li>
-        <li><a href="#">Pricing</a></li>
-        <li><a href="#">Documentation</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
@@ -140,99 +138,61 @@ tr:nth-child(even) {
                 </div>
               </div>
 	      <div class="panel panel-default">
-		<?php
-		$url = "http://54.161.132.160:5555/get_sensor_data?";
-                $data_arr = array("endpoint"=>"a3bikkrdsdyhco-ats.iot.us-east-1.amazonaws.com","thingname"=>"edge_station1");
-                $response = http($url,$data_arr,'get');
-                $jsonArray = json_decode($response,true);
-                $temperature = $jsonArray["temperature"];
-                $humidity = $jsonArray["humidity"];
-                $precipProbability = $jsonArray["precipProbability"];
-                $windSpeed = $jsonArray["windSpeed"];
-                $gps = $jsonArray["gps"];
-
-                function http($url,$data=[],$method='get'){
-                    $ch = curl_init();
-                    $chOpts = [
-                        CURLOPT_SSL_VERIFYPEER=>false,
-                        CURLOPT_HEADER=>false,
-                        CURLOPT_FOLLOWLOCATION=>true,
-                        CURLOPT_RETURNTRANSFER=>true,
-                        CURLOPT_CONNECTTIMEOUT =>8,
-                        CURLOPT_TIMEOUT => 16,
-                        CURLOPT_HTTPHEADER,[
-                            'Content-Type: application/json'
-                        ]
-                    ];
+	      <table class="table">
+	      	<thead>
+	      		<tr>
+              		<th>Sensor Type</th>
+                        <th>Data Value</th>
+                        </tr>
+                 </thead>
+                 <tbody>
+	      <?php
+		function http($url,$data=[],$method='get'){
+			$ch = curl_init();
+    		    	$chOpts = [
+        	        CURLOPT_SSL_VERIFYPEER=>false,
+        	        CURLOPT_HEADER=>false,
+        		CURLOPT_FOLLOWLOCATION=>true,
+        		CURLOPT_RETURNTRANSFER=>true,
+        		CURLOPT_CONNECTTIMEOUT =>8,
+        		CURLOPT_TIMEOUT => 16,
+        		CURLOPT_HTTPHEADER,[
+            		    'Content-Type: application/json'
+        		]
+    		    ];
                     $url.='?'.is_array($data)?http_build_query($data):$data;
-                    $chOpts[CURLOPT_URL]=$url;
+        	    $chOpts[CURLOPT_URL]=$url;
                     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-                    //echo 'Request: '.$method.'['.$url.']'."\n";
-                    //print_r($data);
-                    curl_setopt_array($ch, $chOpts);
-                    if(curl_exec($ch) === false)
-                    {
+    		    //echo 'Request: '.$method.'['.$url.']'."\n";
+    		    //print_r($data);
+    	 	    curl_setopt_array($ch, $chOpts);
+		    $res = curl_exec($ch);
+    		    if($res === false)
+    		    {
                         echo 'Curl error: ' . curl_error($ch);
                     }
-                    $res = curl_exec($ch);
-                    curl_close($ch);
+   		    curl_close($ch);
                     return $res;
-
 		}
-		?>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Sensor Type</th>
-                                <th>Data Value</th>
-                            </tr>
-                        </thead>
-			<tbody>
-			<tr>
-    <td>Temperature</td>
-    <td>
-        <?php
-            echo $temperature;
-        ?>
-    </td>
-  </tr>
-  <tr>
-    <td>Humidity</td>
-    <td>
-        <?php
-            echo $humidity;
-        ?>
-    </td>
-  </tr>
-  <tr>
-    <td>Rain</td>
-    <td>
-        <?php
-            echo $precipProbability;
-        ?>
-    </td>
-  </tr>
-  <tr>
-    <td>Windspeed</td>
-    <td>
-        <?php
-            echo $windSpeed;
-        ?>
-    </td>
-  </tr>
-                            <tr>
-       				<td>GPS</td>
-    <td>
-        <?php
-            echo $gps;
-        ?>
-    </td>                                     
-                            </tr>
-                        </tbody>
-                    </table>
-                              
-                  </div>
-              </div>
+
+		$url = "http://54.161.132.160:5555/get_sensor_data?";
+                $data_arr = array("thingname"=>"edge_station1");
+                $response = http($url,$data_arr,'get');
+		$jsonArray = json_decode($response,true);
+		foreach ($jsonArray as $key=>$value) {
+			if ($value != "NA" && $key!="edge_station_id" && $key!="timestamp") {
+				echo "<tr><td>";
+                    		echo ucfirst($key);
+                    		echo "</td><td>";
+                    		echo $value;
+                    		echo "</td></tr>";
+			}
+		}
+              ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
               
 
 <div>
