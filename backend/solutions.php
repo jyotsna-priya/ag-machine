@@ -59,9 +59,9 @@ session_start();
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar">inside icon bar1</span>
-        <span class="icon-bar">inside icon bar2</span>
-        <span class="icon-bar">inside icon bar3</span>                        
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
       </button>
       <a class="navbar-brand" href="#">
           <!--img src="logo.jpg"-->
@@ -69,10 +69,7 @@ session_start();
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li><a href="#">Home</a></li>
         <li class="active"><a href="#">Solutions</a></li>
-        <li><a href="#">Pricing</a></li>
-        <li><a href="#">Documentation</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
@@ -93,16 +90,12 @@ session_start();
       <div class="item active">
             <img src="tractor.jpg" alt="tractor_image" style="height: 400px; width: 1200px">
         <div class="carousel-caption">
-          <!--h3>AG Machine Tractors.</h3-->
-          <!--p>AG Machine Tractors</p-->
         </div>      
       </div>
 
       <div class="item">
         <img src="drone.jpg" alt="drone_image" style="height: 400px; width: 1200px">
         <div class="carousel-caption">
-          <!--h3>More Sell $</h3-->
-          <!--p>AG Machine Drones</p-->
         </div>      
       </div>
     </div>
@@ -128,9 +121,10 @@ session_start();
                                 <table class="table table-striped">
                                   <thead>
                                     <tr>
-                                      <th>County</th>
-                                      <th>City</th>
-                                      <th>Edge Station ID</th>
+                                      <th>Machine Type</th>
+                                      <th>Location</th>
+				      <th>Edge Station ID</th>
+				      <th>Edge Station Name</th>
                                       <th>Action</th>
                                     </tr>
                                   </thead>
@@ -143,27 +137,30 @@ session_start();
                                       if ($conn->connect_error) {
                                       die("Connection failed: " . $conn->connect_error);
                                       }
-                                      $sql = "SELECT county, city, edgestation_id, rented FROM edgestation";
+                                      $sql = "SELECT machine_type, city, edgestation_id, edgestation_name, rented FROM edgestation";
                                       $result = $conn->query($sql);
                                       if ($result->num_rows > 0) {
                                       // output data of each row
                                       while($row = $result->fetch_assoc()) {
-                                        $data = array(
+					$data = array(
                                           'header' => '',
-                                          'county' => $row["county"],
+                                          'machine_type' => $row["machine_type"],
                                           'city' => $row["city"],
                                           'edgestation_id' => $row["edgestation_id"],
-                                          'rented' => $row["rented"]
+					  'rented' => $row["rented"],
+					  'edgestation_name' => $row["edgestation_name"]
                                         );
                                         $query = http_build_query(array('edgestationdata' => $data));
-                                        /*echo "<tr><td>" . $row["county"]. "</td><td>" . $row["city"] . "</td><td>"
+					/*echo "<tr><td>" . $row["machine_type"]. "</td><td>" . $row["city"] . "</td><td>"
                                       . $row["edgestation_id"]. "</td><td>" . "<a href = 'sensors.php'>Select</a>" . "</td></tr>";*/
                                         echo "<tr><td>";
-                                        echo $row["county"];
+                                        echo ucfirst($row["machine_type"]);
                                         echo "</td><td>";
                                         echo $row["city"];
                                         echo "</td><td>";
-                                        echo $row["edgestation_id"];
+					echo $row["edgestation_id"];
+					echo "</td><td>";
+					echo $row["edgestation_name"];
                                         echo "</td><td>";
                                         echo "<a href = \"sensors.php?edgestationdata=".$query."\">Select</a>";
                                         echo "</td></tr>";
