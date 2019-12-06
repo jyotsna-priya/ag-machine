@@ -23,16 +23,6 @@ def customShadowCallback_Update(payload, responseStatus, token):
     if responseStatus == "rejected":
         print("Update request " + token + " rejected!")
 
-def customShadowCallback_Delete(payload, responseStatus, token):
-    if responseStatus == "timeout":
-        print("Delete request " + token + " time out!")
-    if responseStatus == "accepted":
-        print("~~~~~~~~~~~~~~~~~~~~~~~")
-        print("Delete request with token: " + token + " accepted!")
-        print("~~~~~~~~~~~~~~~~~~~~~~~\n\n")
-    if responseStatus == "rejected":
-        print("Delete request " + token + " rejected!")
-
 # Custom Shadow callback
 def customShadowCallback_Delta(payload, responseStatus, token):
     # payload is a JSON string ready to be parsed using json.loads(...)
@@ -59,6 +49,40 @@ def customShadowCallback_Delta(payload, responseStatus, token):
         subprocess.check_call(["python3", "/home/ubuntu/edgestation/scheduleDataGeneration.py", "--sensor_list", "{}".format(sensor_list), "--location", "{}".format(location), "--edge_station_id", "{}".format(sensor_status["thingname"])])
         with open("current_sensor.txt", "w") as fw:
             fw.write(sensor_list)
+
+# Custom Shadow callback
+def customShadowCallback_DeltaTemp(payload, responseStatus, token):
+    # payload is a JSON string ready to be parsed using json.loads(...)
+    # in both Py2.x and Py3.x
+    print(responseStatus)
+    payloadDict = json.loads(payload)
+    print("++++++++DELTA++++++++++")
+    print("sensor status: " + str(payloadDict["state"]["property"]["sensor_status"]))
+    print("+++++++++++++++++++++++\n\n")
+
+    sensor_status = payloadDict["state"]["property"]["sensor_status"]
+    sensor_list = ""
+    for sensor in sensor_status.keys():
+        if sensor_status[sensor] == "Add":
+            sensor_list += sensor + ","
+    sensor_list = sensor_list.strip(",")
+    if os.path.exists("current_sensor.txt"):
+        with open("current_sensor.txt", "r") as fr:
+            current_sensor_list = fr.read()
+    else:
+        current_sensor_list = ""
+    location = sensor_status["location"].replace(" ", ",")
+    if sensor_list != "":
+        print("Sensor list not empty")
+        global start_time
+        timer = time.time() - start_time
+        print(timer)
+        if timer > 60 or current_sensor_list == "" or current_sensor_list != sensor_list:
+            print("current_sensor_list: {}".format(current_sensor_list))
+            subprocess.check_call(["python3", "/home/ubuntu/edgestation/generate_sensor_data.py", "--sensor_list", "{}".format(sensor_list), "--location", "{}".format(location), "--edge_station_id", "{}".format(sensor_status["thingname"])])
+            with open("current_sensor.txt", "w") as fw:
+                fw.write(sensor_list)
+            start_time = time.time()
 
 # Read in command-line parameters
 #parser = argparse.ArgumentParser()
@@ -108,12 +132,16 @@ deviceShadowHandler = myAWSIoTMQTTShadowClient.createShadowHandlerWithName(thing
 
 # Get latest data from the local DB
 def getDataFromDB():
-    if not os.path.exists("/home/ubuntu/sensor_data.db"):
-        return ""
-    sensor_list = ["timestamp","edge_station_id","temperature","humidity","gps","precipProbability","windSpeed"]
-    conn = sqlite3.connect('/home/ubuntu/sensor_data.db')
+    db_path = "/home/ubuntu/sensor_data.db"
+    if not os.path.exists(db_path):
+        return {}
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute("SELECT * FROM sensor")
+    header = c.description
+    sensor_list = list()
+    for column in header:
+        sensor_list.append(column[0])
     result = c.fetchall()[-1]
     data = dict()
     for index,sensor in enumerate(sensor_list):
