@@ -16,29 +16,41 @@
                     <div class="image">
                         <img src="assets/plant.jpg" alt="card background" class="card-img">
                         <img src="assets/drone1.jpg" alt="machine image" class="machine-img">
-                        <h1 class="shop-item">Machine 1</h1>
-                        <p class="price">$20</p> 
+                        <h1 class="shop-item">Simple Drone</h1>
+                        <p>base price: </p> 
+                        <p class="price">$50</p>
+                        <p>price per day:</p> 
+                        <p>$2</p> 
                         <button class="btn btn-add" type="button">Add to Cart</button>                           
                     </div>
                     <div class="image">
                         <img src="assets/plant.jpg" alt="bard background" class="card-img">
                         <img src="assets/drone2.png" alt="machine image" class="machine-img">
-                        <h1 class="shop-item">Machine 2</h1>
-                        <p class="price">$20</p>  
+                        <h1 class="shop-item">Deluxe Drone</h1>
+                        <p>base price: </p> 
+                        <p class="price">$100</p>
+                        <p>price per day:</p> 
+                        <p>$4</p>  
                         <button class="btn btn-add" type="button">Add to Cart</button>                            
                     </div>
                     <div class="image">
                         <img src="assets/plant.jpg" alt="bard background" class="card-img">
-                        <img src="assets/drone3.jpg" alt="machine image" class="machine-img">
-                        <h1 class="shop-item">Machine 3</h1>
-                        <p class="price">$20</p>  
+                        <img src="assets/tractor1.jfif" alt="machine image" class="machine-img">
+                        <h1 class="shop-item">Simple Tractor</h1>
+                        <p>base price: </p> 
+                        <p class="price">$200</p>
+                        <p>price per day:</p> 
+                        <p>$6</p> 
                         <button class="btn btn-add" type="button">Add to Cart</button>                            
                     </div>
                     <div class="image">
                         <img src="assets/plant.jpg" alt="bard background" class="card-img">
-                        <img src="assets/drone4.jpg" alt="machine image" class="machine-img">
-                        <h1 class="shop-item">Machine 4</h1>
-                        <p class="price">$20</p> 
+                        <img src="assets/tractor2.jpg" alt="machine image" class="machine-img">
+                        <h1 class="shop-item">Deluxe Tractor</h1>
+                        <p>base price: </p> 
+                        <p class="price">$400</p>
+                        <p>price per day:</p> 
+                        <p>$8</p> 
                         <button class="btn btn-add" type="button">Add to Cart</button>                            
                     </div>
                 </div>
@@ -54,13 +66,69 @@
                 </div>
                 <div class="cart-items">
                 </div>
+                <div class="cart-sub-total">
+                    <strong class="cart-sub-total-title">Sub Total</strong>
+                    <span class="cart-sub-total-price">$0</span>
+                </div>
+                <div class="cart-tax">
+                        <strong class="cart-tax-title">Tax (10%)</strong>
+                        <span class="cart-tax-price">$0</span>
+                </div>
                 <div class="cart-total">
-                    <strong class="cart-total-title">Total</strong>
-                    <span class="cart-total-price">$0</span>
+                            <strong class="cart-total-title">Total</strong>
+                            <span class="cart-total-price">$0</span>
                 </div>
             </div>
+            <p class="tooltip">final price will be charged when machines are returned</p>
             <button class="btn btn-remove-all" type="button">REMOVE ALL</button>
-            <button class="btn btn-purchase" type="button">PURCHASE</button>
+            <!-- <button onclick= "location.href='purchase.php'" class="btn btn-purchase" type="button">CONFIRM</button> -->
+            <div id="paypal-button" class="btn-paypal btn-purchase"></div>
+            
+            <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+            <script>
+            paypal.Button.render({
+                // Configure environment
+                env: 'sandbox',
+                client: {
+                sandbox: 'ATaYxwWBe9qznmdTuSmXYEexdMY1dir_9gJGXwHA3cGAp8U24SsElKICf4yXcELoYZ9GjRquHipBfZd6',
+                production: 'demo_production_client_id'
+                },
+                // Customize button (optional)
+                locale: 'en_US',
+                style: {
+                size: 'medium',
+                color: 'black',
+                shape: 'pill',
+                },
+
+                // Enable Pay Now checkout flow (optional)
+                commit: true,
+                // Set up a payment
+                payment: function(data, actions) {
+                    var subtotal = document.getElementsByClassName("cart-total-price")[0].innerHTML;
+                    var thetotal = subtotal.replace("$","")
+                        return actions.payment.create({
+                            transactions: [{
+                            amount: {
+                                total: thetotal,
+                                currency: 'USD'
+                            }
+                            }]
+                        });
+                    
+                
+                },
+                // Execute the payment
+                onAuthorize: function(data, actions) {
+      return actions.payment.execute().then(function() {
+        // Show a confirmation message to the buyer
+        
+        window.alert('Thank you for your purchase!');
+      });
+    }
+  }, '#paypal-button');
+
+            </script>
         </section>
     </body>
 </html>

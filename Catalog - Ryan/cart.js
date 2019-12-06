@@ -24,7 +24,7 @@ function ready(){
         
     }
 
-    document.getElementsByClassName('btn-purchase')[0].addEventListener('click',purchaseClicked)
+    document.getElementsByClassName('btn-paypal')[0].addEventListener('click',purchaseClicked)
     document.getElementsByClassName('btn-remove-all')[0].addEventListener('click',removeAllClicked)
 }
 
@@ -32,23 +32,22 @@ function removeAllClicked(){
     var cartItems = document.getElementsByClassName('cart-items')[0]
     while(cartItems.hasChildNodes){
         cartItems.removeChild(cartItems.firstChild)
-        updateCartTotal()
+        updateCartSubTotal()
     }
     
 }
 
 function purchaseClicked(){
-    
-    alert('Thanks for your contribution')
     var cartItems = document.getElementsByClassName('cart-items')[0]
     while(cartItems.hasChildNodes){
         cartItems.removeChild(cartItems.firstChild)
-        updateCartTotal()
+        updateCartSubTotal()
     }
+    
     
 }
 
-function updateCartTotal(){
+function updateCartSubTotal(){
     var cartItemContainer = document.getElementsByClassName('cart-items')[0]
     var cartRows = cartItemContainer.getElementsByClassName('cart-row')
     var total =0
@@ -61,13 +60,25 @@ function updateCartTotal(){
         total =total +( price * quantity)
     }
     total = Math.round(total*100)/100
+    document.getElementsByClassName('cart-sub-total-price')[0].innerText ='$'+ total
+    updateCartTax(total);
+}
+
+function updateCartTax(subtotal){
+    var tax = subtotal * (10/100)
+    document.getElementsByClassName('cart-tax-price')[0].innerText ='$'+ tax
+    updateCartTotal(tax,subtotal)
+}
+
+function updateCartTotal(tax,subtotal){
+    var total = tax + subtotal
     document.getElementsByClassName('cart-total-price')[0].innerText ='$'+ total
 }
 
 function removeCartItem(event){
     var buttonClicked = event.target
     buttonClicked.parentElement.parentElement.remove();
-    updateCartTotal()
+    updateCartSubTotal()
 }
 
 function quantityChanged(event){
@@ -75,7 +86,7 @@ function quantityChanged(event){
     if(isNaN(input.value) || input.value<=0){
         input.value = 1
     }
-    updateCartTotal()
+    updateCartSubTotal()
 }
 
 function addToCart(event){
@@ -85,7 +96,7 @@ function addToCart(event){
     var price = shopItem.getElementsByClassName('price')[0].innerText
     var imageSrc = shopItem.getElementsByClassName('machine-img')[0].src
     addItemToCart(title,price,imageSrc)
-    updateCartTotal()
+    updateCartSubTotal()
 }
 
 function addItemToCart(title,price,imageSrc){
