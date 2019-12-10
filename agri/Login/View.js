@@ -1,62 +1,101 @@
 import React, {Component} from 'react'
-import {StyleSheet, Text, View,Image,Button} from 'react-native'
+import {StyleSheet, Text, View,Image,Button,Alert} from 'react-native'
 import {Header} from 'react-native-elements'
 import {TouchableOpacity,SafeAreaView,Platform,StatusBar} from 'react-native'
 import {Actions} from 'react-native-router-flux'
+import axios from 'axios'
 
 class SensorTab extends Component{
-    handleConfigure(){
-        Actions.Configure();
+    constructor(props)
+    {
+        super()
+        this.state={
+            machines:[],
+            machineType: '',
+            machineID:'',
+            status:'',
+            data:''
+        }
     }
-    handleView(){
-        Actions.ViewData();
+    componentDidMount(){
+        axios({
+            url: 'http://10.250.10.12:3000/edge',
+            method: 'get',
+            header: {Accept:"application/json"}
+        })
+        .then(res=>{
+            this.setState({
+                machines: res.data
+            })
+        })
+        .catch(err=>{
+           console.log(err)
+        })
     }
+    createMachineType(machine){
+        return machine.map((name)=>{
+            return (
+                    <Text style={styles.SensorDesStyle}>
+                            {name.machine_type}
+                    </Text>
+                
+            )
+        })
+    }
+    createMachineId(machine){
+        return machine.map((name)=>{
+            return (
+                    <Text style={styles.SensorDesStyle}>
+                            {name.edgestation_id}
+                    </Text>
+                
+            )
+        })
+    }
+    createActions(machine){
+        return machine.map((name)=>{
+            return (
+            <View>
+                    <View style={styles.buttonContainer3}>
+                        <TouchableOpacity onPress={()=>{Actions.Configure({data:name})}} >
+                                    <Text style={{color:"#acd385"}}>Configure</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.buttonContainer3}>
+                        <TouchableOpacity onPress={()=>{Actions.ViewData({data:name})}}>
+                                    <Text style={{color:"#acd385"}}>Details</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                )
+        })
+    }
+    componentWillMount(){}
     render(){
         return(
-            <View style={styles.sensorV}>
-                <View style={styles.sensorVC}>
-                <Text style={styles.SensorTextStyle}>
-                Machine Type
-                </Text>
-                <Text style={styles.SensorDesStyle}>
-                Drone 1
-                </Text>
+            <View>
+                <View style={styles.sensorV}>
+                    <View style={styles.sensorVC}>
+                        <Text style={styles.SensorTextStyle}>
+                        Machine Type
+                        </Text>
+                        {this.createMachineType(this.state.machines)}
+                    </View>
+                    <View style={styles.sensorVC}>
+                        <Text style={styles.SensorTextStyle}>
+                        Machine ID
+                        </Text>
+                        {this.createMachineId(this.state.machines)}
+                    </View>
+                    <View style={styles.sensorVC}>
+                        <Text style={styles.SensorTextStyle}>
+                        Actions
+                        </Text>
+                        {this.createActions(this.state.machines)}
+                    </View>
                 </View>
-                <View style={styles.sensorVC}>
-                <Text style={styles.SensorTextStyle}>
-                Machine ID
-                </Text>
-                <Text style={styles.SensorDesStyle}>
-                104499316
-                </Text>
-                </View>
-                <View style={styles.sensorVC}>
-                <Text style={styles.SensorTextStyle}>
-                Status
-                </Text>
-                <Text style={styles.SensorDesStyle}>
-                Active
-                </Text>
-                </View>
-                <View style={styles.sensorVC}>
-                <Text style={styles.SensorTextStyle}>
-                Actions
-                </Text>
-                <View style={styles.buttonContainer3}>
-                <TouchableOpacity onPress={this.handleConfigure} >
-                            <Text>Configure</Text>
-                </TouchableOpacity>
-                </View>
-                <View style={styles.buttonContainer3}>
-                <TouchableOpacity onPress={this.handleView}>
-                            <Text>Details</Text>
-                </TouchableOpacity>
-                </View>
-                
-                
-                </View>
-                
             </View>
+            
         )
     }
 }
@@ -66,7 +105,14 @@ export default class viewMachine extends Component {
         Actions.views();
     }
     handleLog(){
-        Actions.Login();
+        Alert.alert(
+            'logging out..',
+            'Are you sure you want to log out?',
+            [
+                {text:'No',onPress:()=>console.log('NO Pressed'),style:'cancel'},
+                {text:'Yes',onPress:()=>Actions.Login()},
+            ],
+        );
     }
     render(){
         return(    
@@ -78,10 +124,8 @@ export default class viewMachine extends Component {
                             source = {require('../assets/plant2.png')}/>
                         </TouchableOpacity>
                     <TouchableOpacity  style={styles.buttonContainer2}>
-                        <Button onPress={this.handleLog} color="green" title="Log Out" style={styles.logout}></Button>
+                        <Button onPress={this.handleLog} color="#982f07" title="Log Out" style={styles.logout}></Button>
                         </TouchableOpacity>
-                    
-                       
                             
                     </View>
                    <SensorTab/>
@@ -95,19 +139,20 @@ export default class viewMachine extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor:'#345243',
+        backgroundColor:'#283437',
         flex:1
     },
     SensorDesStyle: {
-        padding: 25,
-        fontSize: 12,
-        color : '#FFF',
-        backgroundColor:'black'
+        padding: 33,
+        fontSize: 15,
+        color : '#356109',
+        backgroundColor:'#acd385'
     },
     SensorTextStyle: {
-        padding: 25,
+        padding: 33,
         fontSize: 15,
-        color : '#FFF'
+        color : '#FFF',
+        backgroundColor:'#1e2d0f'
     },
     sensorVC: {
         backgroundColor:'green',
@@ -137,8 +182,9 @@ const styles = StyleSheet.create({
     buttonContainer3:{
         alignSelf: 'center',
         justifyContent: 'center',
-        marginTop: 10,
+        marginTop: 20,
         backgroundColor: 'green',
+        color:'#acd385',
         height:20,
         width:80
     },
