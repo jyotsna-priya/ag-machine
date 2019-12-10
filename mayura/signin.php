@@ -1,7 +1,7 @@
 <?php
 session_unset();
-session_destroy();
 session_regenerate_id();
+session_destroy();
 session_start();
 ?>
 <!DOCTYPE html>
@@ -80,7 +80,7 @@ session_start();
         <li><a href="index.php">Home</a></li>
         <li><a href="products.php">Products</a></li>
         <li><a href="pricing.php">Pricing</a></li>
-        <li><a href="catalog.html">Order</a></li>
+        <li><a href="catalog.php">Order</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a class="active" href="contact.php"><span></span> Contact Us</a></li>
@@ -94,13 +94,12 @@ session_start();
     </div>
   </div>
 </nav>
-    <form class="form-signin" action="" method="post">
-  <div class="container text-center">
-    <div class="row">
-      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-        <div class="card card-signin my-5">
-          <div class="card-body">
-            <h5 class="card-title text-center">Sign In</h5>
+    <div class="container con" align="center">
+    <div class="row" align="center">
+      <div class="col-sm-9 col-md-7 col-lg-5" align="center">
+        <div class="card card-signin my-5" align="center">
+          <div class="card-body" align="center">
+            <h5 class="card-title" align="center">Sign In</h5>
             <form class="form-signin" action="" method="post">
               <div class="form-label-group">
                 <input type="text" name="email" id="username" class="form-control" placeholder="User Name" required autofocus>
@@ -118,9 +117,9 @@ session_start();
              <div class="form-group">
       <label for="role">Sign in As</label>
       <select class="form-control" id="role" name="role">
-        <option value="F">Farmer</option>
-        <option value="M">Machine Controller</option>
-        <option value="S">Service Carrier</option>
+        <option value="farmer">Farmer</option>
+        <option value="machinecontroller">Machine Controller</option>
+        <option value="servicecarrierstaff">Service Carrier</option>
        
       </select>
       </div>
@@ -150,24 +149,33 @@ session_start();
         echo $password;
         $role=$_POST['role'];
         echo $role;
-        $conn = mysqli_connect("localhost", "root", "root", "db");
+        $conn  = mysqli_connect("ec2-54-161-132-160.compute-1.amazonaws.com", "ag-machine", "password123", "agmachinedb");
+
             // Check connection
             if ($conn->connect_error) {
                 echo "connect failed";
                 die("Connection failed: " . $conn->connect_error);
             }
+            
 
              if(!empty($email) && !empty($password)){
                 echo "inside main loop";
-                if($role == 'F') {
-                    $sql="SELECT password FROM farmers WHERE email = '$email'";
+                if($role == "farmer") {
+                    $sql="SELECT * FROM farmers WHERE email_id = '$email'";
                     echo $sql;
                     $output= $conn->query($sql);
                      $row = $output->fetch_assoc();
-                    if($output->num_rows > 0 && ($row['password'] == $password)){
-                       echo "<script>window.location='./farmer.html'</script>";
-                       session_start();
-                       $_SESSION["isLogged"] = "1";
+                    if(($output->num_rows > 0 ) && ($row['password'] == $password)){
+                      echo "inside";
+                       $_SESSION["isLogged"] = "TRUE";
+                       echo $_SESSION ["isLogged"];
+                       $_SESSION["firstname"] = $row['firstname_farmer'];
+                       $_SESSION["lastName"] = $row['lastname_farmer'];
+                       $_SESSION["farmer_id"] = $row['farmer_id'];
+                       echo $_SESSION["farmer_id"];
+
+                       //echo "<script>window.location='./farmer.html'</script>";
+                      
 
                     }
                     else{
@@ -175,36 +183,42 @@ session_start();
                     }
 
                 }
-                    else if($role == 'S'){
+                    else if($role == 'servicecarrierstaff'){
                         echo "not farmers";
-                    $sql="SELECT pwd FROM users WHERE user_name = '$email'";
+                    $sql="SELECT * FROM users WHERE user_name = '$email'";
                     echo $sql;
                     $output= $conn->query($sql);
                     $row = $output->fetch_assoc();
                     echo $row["pwd"];
-                    if($output->num_rows > 0 && ($row['pwd'] == $password)){
+                    if($output->num_rows > 0 && ($row["pwd"] == $password)){
                        echo "inside fetch";
+                        $_SESSION["isLogged"] = "TRUE";
+                        $_SESSION["uName"] = $row["email"];
+
                        echo "<script>window.location='./service.php'</script>";
-                       session_start();
-                       $_SESSION["isLogged"] = "1";
+                       
+                      
                         }
                         else{
                             echo "not valid";
                             echo "<div style='padding-left:10em;'><b>Incorrect Credentials!</b></div>";
                     }
                     }
-                    else if($role == 'M'){
+                    else if($role == "machinecontroller"){
                         echo "not farmers";
-                    $sql="SELECT pwd FROM users WHERE user_name = '$email'";
+                    $sql="SELECT * FROM users WHERE user_name = '$email'";
                     echo $sql;
                     $output= $conn->query($sql);
                     $row = $output->fetch_assoc();
                     echo $row["pwd"];
                     if($output->num_rows > 0 && ($row['pwd'] == $password)){
                        echo "inside fetch";
-                       echo "<script>window.location='./solutions.php'</script>";
-                       session_start();
-                       $_SESSION["isLogged"] = "1";
+                        $_SESSION["isLogged"] = "TRUE";
+                        $_SESSION["uName"] = $row["email"];
+
+                      echo "<script>window.location='./solutions.php'</script>";
+                     
+                      
                         }
                         else{
                             echo "not valid";

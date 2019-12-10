@@ -80,7 +80,7 @@ session_start();
         <li><a class="active" href="index.php">Home</a></li>
         <li><a href="products.php">Products</a></li>
         <li><a href="pricing.php">Pricing</a></li>
-        <li><a href="catalog.html">Order</a></li>
+        <li><a href="catalog.php">Order</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a class="active" href="contact.php"><span></span> Contact Us</a></li>
@@ -100,7 +100,6 @@ session_start();
   <div class="container con text-center" >
   <div class="row">
       <div>
-        <img src="https://image.ibb.co/kUASdV/contact-image.png" alt="image"/>
         <h2>Contact Us</h2>
         
       </div>
@@ -159,12 +158,8 @@ if(isset( $_POST['submit'])){
   $subject = $_POST['sub'];
   $message = $_POST['message'];
 
-
-$mail_value="From: $firstname.$lastname \n Email: $email \n Message: $message";
-echo $mail_value;
-$mail_to = "dhiv408@gmail.com";
 $mail_header = "From: $email \r\n";
-mail($mail_to, $subject, $mail_value, $mail_header) or die("Error!");
+mail("dhiv408@gmail.com", $subject, $message,"dhiv408@gmail.com") or die("Error!");
 echo "Email sent!";
 
 }

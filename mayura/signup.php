@@ -1,4 +1,4 @@
-?php
+<?php
 session_unset();
 session_destroy();
 session_regenerate_id();
@@ -80,7 +80,7 @@ session_start();
         <li><a href="index.php">Home</a></li>
         <li><a href="products.php">Products</a></li>
         <li><a href="pricing.php">Pricing</a></li>
-        <li><a href="catalog.html">Order</a></li>
+        <li><a href="catalog.php">Order</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a class="active" href="contact.php"><span></span> Contact Us</a></li>
@@ -100,12 +100,12 @@ session_start();
         
 
 
-  <div class="container">
+  <div class="container text-center">
     <div class="row">
       <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
         <div class="card card-signin my-5">
           <div class="card-body">
-            <h5 class="card-title text-center">Sign In</h5>
+            <h5 class="card-title text-center">Sign Up</h5>
             <form class="form-signin" action="" method="post">
               <div class="form-label-group">
                 <input type="text" name="firstname" id="firstname" class="form-control" placeholder="FirstName" required autofocus>
