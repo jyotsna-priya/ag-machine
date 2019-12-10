@@ -26,6 +26,7 @@ section{
 }
 
 .heading::after{
+    
     content: "";
     width: 10rem;
     height: .8rem;
@@ -85,6 +86,11 @@ section{
     font-style: italic;
     text-align: center;
     color: #333;
+}
+
+.btn-paypal{
+    margin-left: 85em;
+    margin-top: 2em;
 }
 
 .btn{
@@ -176,6 +182,16 @@ section{
     margin-top: 10px;
     margin-right: 10px;
 }
+.cart-sub-total {
+    text-align: end;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+.cart-tax {
+    text-align: end;
+    margin-top: 10px;
+    margin-right: 10px;
+}
 
 .cart-total-title {
     font-weight: bold;
@@ -183,13 +199,41 @@ section{
     color: black;
     margin-right: 20px;
 }
+.cart-tax-title {
+    font-weight: bold;
+    font-size: 1.5em;
+    color: black;
+    margin-right: 20px;
+}
+.cart-sub-total-title {
+    font-weight: bold;
+    font-size: 1.5em;
+    color: black;
+    margin-right: 20px;
+}
 
+.cart-tax-price {
+    color: #333;
+    font-size: 1.5em;
+}
 .cart-total-price {
     color: #333;
     font-size: 1.5em;
 }
+.cart-sub-total-price {
+    color: #333;
+    font-size: 1.5em;
+}
 
-.btn-purchase{
-    margin-left: 5em;
-    margin-top: 5em;
+.btn-remove-all{
+    margin-left: 65em;
+    margin-top: 2em;
+}
+
+.tooltip{
+    text-align: center
+}
+/* new added  */
+.cart-sensor{
+    width: 40%;
 }
