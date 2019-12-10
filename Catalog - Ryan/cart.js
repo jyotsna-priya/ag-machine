@@ -23,11 +23,46 @@ function ready(){
         button.addEventListener('click',addToCart)
         
     }
-
+// new code
+    var itemContainer = document.getElementsByClassName('cart-items')[0]
+    var rowContainer = itemContainer.getElementsByClassName('cart-row')
+    for(var i=0;i<rowContainer.length;i++){
+        cartRow=rowContainer[i]
+        var spanElement = cartRow.getElementsByClassName('cart-sensor')[0]
+        var divElement = spanElement.getElementsByClassName('checkContainer')[0]
+        var temp = divElement.getElementsByClassName('tempClass')
+        var hum = divElement.getElementsByClassName('humClass')
+        var rain = divElement.getElementsByClassName('rainClass')
+        var gps = divElement.getElementsByClassName('gpsClass')
+        var speed = divElement.getElementsByClassName('speedClass')
+            temp[0].addEventListener('change',handleChange)
+            hum[0].addEventListener('change',handleChange)
+            rain[0].addEventListener('change',handleChange)
+            gps[0].addEventListener('change',handleChange)
+            speed[0].addEventListener('change',handleChange)
+    }
+// end 
     document.getElementsByClassName('btn-paypal')[0].addEventListener('click',purchaseClicked)
     document.getElementsByClassName('btn-remove-all')[0].addEventListener('click',removeAllClicked)
 }
-
+// new
+function handleChange(e){
+    console.log(e.target.name,e.target.checked)
+    var itemContainer = document.getElementsByClassName('cart-items')[0]
+    var rowContainer = itemContainer.getElementsByClassName('cart-row')
+    for(var i=0;i<rowContainer.length;i++){
+        cartRow=rowContainer[i]
+        var spanElement = cartRow.getElementsByClassName('cart-sensor')[0]
+        var divElement = spanElement.getElementsByClassName('checkContainer')[0]
+        var temp = divElement.getElementsByClassName('tempClass')[0]
+        var hum = divElement.getElementsByClassName('humClass')[0]
+        var rain = divElement.getElementsByClassName('rainClass')[0]
+        var gps = divElement.getElementsByClassName('gpsClass')[0]
+        var speed = divElement.getElementsByClassName('speedClass')[0]
+        console.log(temp.checked,hum.checked,rain.checked,gps.checked,speed.checked)
+    }
+}
+//end
 function removeAllClicked(){
     var cartItems = document.getElementsByClassName('cart-items')[0]
     while(cartItems.hasChildNodes){
@@ -117,6 +152,21 @@ function addItemToCart(title,price,imageSrc){
             <img class="cart-item-image" src="${imageSrc}" width="100" height="100">
             <span class="cart-item-title">${title}</span>
         </div>
+        <!-- new -->
+        <span style="flex-direction: column;align-items: center;margin-top:2em;" class="cart-column cart-sensor">
+        <div class="checkContainer" >
+        <input class="speedClass" type ="checkbox" name="Speed"> Speed Sensor
+        <br>
+        <input class="tempClass" type ="checkbox" name="Temperature"> Temperature Sensor
+        <br>
+        <input class="humClass" type ="checkbox" name="Humidity"> Humidity Sensor 
+        <br>
+        <input class="rainClass" type ="checkbox" name="Rainfall"> Rainfall Sensor
+        <br>
+        <input class="gpsClass" type ="checkbox" name="GPS"> GPS Sensor
+    </div>
+                            </span>
+        <!-- end new -->
         <span class="cart-price cart-column">${price}</span>
         <div class="cart-quantity cart-column">
             <input class="cart-quantity-input" type="number" value="1">

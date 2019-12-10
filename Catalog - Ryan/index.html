@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang='en'>
     <head>
-        <meta charset="="UTF-8>
+        <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Edge machine catalog</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
         <link rel= "stylesheet" href="styles.css">
         <script src="cart.js" async></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     </head>
     <body>
         <section>
@@ -61,6 +62,9 @@
                 <h1 class="heading">Cart</h1>
                 <div class="cart-row">
                     <span class="cart-item cart-header cart-column">ITEM</span>
+                    <!-- new -->
+                    <span class="cart-sensor cart-header cart-column">SENSORS</span>
+                    <!-- end added -->
                     <span class="cart-price cart-header cart-column">PRICE</span>
                     <span class="cart-quantity cart-header cart-column">QUANTITY</span>
                 </div>
@@ -107,7 +111,13 @@
                 payment: function(data, actions) {
                     var subtotal = document.getElementsByClassName("cart-total-price")[0].innerHTML;
                     var thetotal = subtotal.replace("$","")
+                    var totalArray = {}
+                    totalArray.total = thetotal
+                    
                         return actions.payment.create({
+                            // redirect_urls:{
+                            //     return_url:'http://localhost/Catalog-Ryan/test/php'
+                            // },
                             transactions: [{
                             amount: {
                                 total: thetotal,
@@ -120,11 +130,42 @@
                 },
                 // Execute the payment
                 onAuthorize: function(data, actions) {
+                    // new
+                    var totalArray = {}
+                    totalArray.sensor=[{},{},{},{}]
+                    var subtotal = document.getElementsByClassName("cart-total-price")[0].innerHTML;
+                    var thetotal = subtotal.replace("$","")
+                    var itemContainer = document.getElementsByClassName('cart-items')[0]
+                    var rowContainer = itemContainer.getElementsByClassName('cart-row')
+                    for(var i=0;i<rowContainer.length;i++){
+                    cartRow=rowContainer[i]
+                    var spanElement = cartRow.getElementsByClassName('cart-sensor')[0]
+                    var divElement = spanElement.getElementsByClassName('checkContainer')[0]
+                    var temp = divElement.getElementsByClassName('tempClass')
+                    var hum = divElement.getElementsByClassName('humClass')
+                    var rain = divElement.getElementsByClassName('rainClass')
+                    var gps = divElement.getElementsByClassName('gpsClass')
+                    var speed = divElement.getElementsByClassName('speedClass')
+                    totalArray.sensor[i].temp = temp[0].checked
+                    totalArray.sensor[i].hum = hum[0].checked
+                    totalArray.sensor[i].rain = rain[0].checked
+                    totalArray.sensor[i].gps = gps[0].checked
+                    totalArray.sensor[i].speed = speed[0].checked
+                }
+                totalArray.total= thetotal
+                $.ajax({
+                        url:'test.php',
+                        method:"post",
+                        data: totalArray,
+                        success:function(res){
+                            console.log(res)
+                        }
+                    })
+                //  new end
       return actions.payment.execute().then(function() {
-        // Show a confirmation message to the buyer
-        
         window.alert('Thank you for your purchase!');
       });
+    //return actions.redirect();
     }
   }, '#paypal-button');
 
