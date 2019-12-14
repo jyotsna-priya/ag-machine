@@ -1,0 +1,3 @@
+time_stamp,edge_station_id,temperature,humidity,gps,windspeed,rainfall
+2019-12-03 02:16:02,edge_station1,53.21,0.9,38.8267 -123.4233,3.76,0
+2019-12-03 02:17:01,edge_station1,53.21,0.9,38.8267 -123.4233,3.77,0
