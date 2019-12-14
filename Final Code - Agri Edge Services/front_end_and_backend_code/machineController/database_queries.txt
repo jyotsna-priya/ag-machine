@@ -1,0 +1,16 @@
+CREATE TABLE Users (
+    UserID int NOT NULL,
+    FirstName varchar(255) NOT NULL,
+    LastName varchar(255) NOT NULL,
+    Address varchar(255) NOT NULL,
+    City varchar(255) NOT NULL,
+    Password varchar(255) NOT NULL,
+    Role varchar(50) NOT NULL,
+    edgestation_id int NOT NULL,
+    farm_id int NOT NULL,
+    PRIMARY KEY (UserID),
+    FOREIGN KEY (edgestation_id) REFERENCES edgestation(edgestation_id)
+);
+
+INSERT INTO Users
+VALUES ("56789", "John", "Doe", "River Oaks Orchard", "San Jose", "abc123", "farmer", 12345, 66666);
