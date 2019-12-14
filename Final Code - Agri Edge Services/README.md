@@ -1,4 +1,4 @@
-Additional packages that were installed using pip3 and pip commands:
+##Additional packages that were installed using pip3 and pip commands:##
 awscli==1.16.283
 AWSIoTPythonSDK==1.4.7
 boto3==1.10.34
